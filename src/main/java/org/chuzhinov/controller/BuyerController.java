@@ -1,5 +1,7 @@
 package org.chuzhinov.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.chuzhinov.model.StationTrainRelationData;
 import org.chuzhinov.model.Train;
 import org.chuzhinov.service.StationService;
@@ -25,8 +27,10 @@ public class BuyerController {
 
     //возвращает toString а не JSON
     @GetMapping(path = "timetable/{stationName}")
-    public Map<Train, StationTrainRelationData> getTimetable(@PathVariable String stationName) {
-        return stationService.getTimetable(stationName);
+    public String getTimetable(@PathVariable String stationName) throws JsonProcessingException {
+        Map<Train, StationTrainRelationData> timetable = stationService.getTimetable(stationName);
+
+        return new ObjectMapper().writeValueAsString(timetable);
     }
 
     @PostMapping(path = "tickets")
