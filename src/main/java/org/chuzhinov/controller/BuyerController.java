@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(path = "/api/buyer")
 public class BuyerController {
@@ -25,7 +26,6 @@ public class BuyerController {
     @Autowired
     private TrainService trainService;
 
-    //возвращает toString а не JSON
     @GetMapping(path = "timetable/{stationName}")
     public String getTimetable(@PathVariable String stationName) throws JsonProcessingException {
         Map<Train, StationTrainRelationData> timetable = stationService.getTimetable(stationName);
