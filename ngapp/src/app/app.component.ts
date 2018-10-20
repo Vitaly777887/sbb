@@ -17,7 +17,7 @@ export class AppComponent {
   constructor(private httpService: HttpService) {
   }
 
-  submit(form: FormGroup) {
+  getTimetable(form: FormGroup) {
     this.httpService.getTimetable(form.value.stationName).subscribe((name) => {
       console.log(name);
       this.data = name;

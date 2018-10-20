@@ -27,7 +27,7 @@ public class AdminController {
     private TrainService trainService;
 
     @GetMapping(path = "passengers")
-    public List<Passenger> timetable() {
+    public List<Passenger> getPassengers() {
         return passengerService.getAll();
     }
 
@@ -46,9 +46,9 @@ public class AdminController {
         trainService.save(train);
     }
 
-    @GetMapping(path = "passengersontrain/{number}")
-    public List<Passenger> getPassengersOnTrain(@PathVariable int number) {
-        return trainService.getPassengersByNumberTrain(number);
+    @GetMapping(path = "passengersontrain/{numberTrain}")
+    public List<Passenger> getPassengersOnTrain(@PathVariable int numberTrain) {
+        return trainService.getPassengersByNumberTrain(numberTrain);
     }
 
     @GetMapping(path = "trains")
