@@ -39,10 +39,9 @@ public class BuyerController {
                           @RequestParam LocalDate birthday,
                           @RequestParam int numberTrain,
                           @RequestParam String stationName) {
-        if (trainService.isAvailable(name, surname, birthday, numberTrain, stationName)) {
-
-
-        }
+        if (trainService.isAvailablePassengerOnTrain(name, surname, birthday, numberTrain, stationName)) {
+            trainService.addTicket(name, surname, birthday, numberTrain, stationName);
+        } else throw new IllegalArgumentException();
     }
 
     @PostMapping(path = "trains/search")

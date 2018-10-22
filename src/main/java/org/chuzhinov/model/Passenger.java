@@ -13,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 // у пассажира может быть много билетов главное чтобы время не накладывалось, как добавить уникальность даты
@@ -48,5 +49,5 @@ public class Passenger {
 
     @JsonIgnore
     @OneToMany(mappedBy = "passenger")
-    private List<Ticket> tickets;
+    private List<Ticket> tickets = new ArrayList<>();
 }

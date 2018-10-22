@@ -21,13 +21,28 @@ public class TrainService {
     private TrainRepository trainRepository;
     @Autowired
     private StationService stationService;
+    @Autowired
+    private PassengerService passengerService;
+    @Autowired
+    private TicketService ticketService;
 
     public void save(Train train) {
         trainRepository.save(train);
     }
 
+    public List<Train> getAll() {
+        return trainRepository.findAll();
+    }
+
     public Train getByNumberTrain(Integer numberTrain) {
         return trainRepository.getByNumberTrain(numberTrain);
+    }
+
+    public void addTicket(String name, String surname, LocalDate birthday,
+                          int numberTrain, String stationName) {
+        Train train = trainRepository.getByNumberTrain(numberTrain);
+        Passenger passenger = passengerService.save(new Passenger(name, surname, birthday));
+        ticketService.save(new Ticket(train, passenger));
     }
 
     public List<Passenger> getPassengersByNumberTrain(Integer numberTrain) {
@@ -36,24 +51,20 @@ public class TrainService {
                 .collect(Collectors.toList());
     }
 
-    public List<Train> getAll() {
-        return trainRepository.findAll();
-    }
-
-    public boolean isAvailable(String name, String surname, LocalDate birthday,
-                               int numberTrain, String stationName) {
+    public boolean isAvailablePassengerOnTrain(String name, String surname, LocalDate birthday,
+                                               int numberTrain, String stationName) {
         Train train = getByNumberTrain(numberTrain);
 
-        if (train.getTickets().size() < train.getCountPassengers()) {
+        if (train.getTickets() == null || train.getTickets().size() < train.getCountPassengers()) {
             Passenger passenger = new Passenger(name, surname, birthday);
-
-            if (!train.getTickets()
+            //passenger is not register on train
+            if (train.getTickets() == null || !train.getTickets()
                     .stream()
                     .map(Ticket::getPassenger)
                     .collect(Collectors.toList())
                     .contains(passenger)) {
                 Station station = stationService.getByName(stationName);
-
+                //before arrival train is more 10 minutes
                 if (train.getTimetable()
                         .get(station)
                         .getArrivalTime()
@@ -67,6 +78,9 @@ public class TrainService {
 
     public List<Train> searchTrain(String stationNameFrom, String stationNameTo,
                                    LocalDateTime timeFrom, LocalDateTime timeTo) {
+        if (timeFrom.isBefore(LocalDateTime.now()) || timeTo.isBefore(LocalDateTime.now()) || timeFrom.isAfter(timeTo)) {
+            throw new IllegalArgumentException();
+        }
         Station stationFrom = stationService.getByName(stationNameFrom);
         Station stationTo = stationService.getByName(stationNameTo);
         return trainRepository.findAll().stream()
