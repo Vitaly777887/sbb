@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Station} from "./station/station.model";
-import {Train} from "./train/train.model";
+import {Train} from "./train-list/train.model";
 
 @Injectable()
 export class HttpService {
@@ -33,6 +33,6 @@ export class HttpService {
   }
 
   getTrains() {
-    return this.http.get<Train>(this.adminUrl + '/trains');
+    return this.http.get<Train[]>(this.adminUrl + '/trains');
   }
 }
